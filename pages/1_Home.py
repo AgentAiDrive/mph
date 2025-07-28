@@ -4,7 +4,7 @@ import os
 import json
 
 
-col1, col2, col3, col4 = st.columns(2)
+col1, col2 = st.columns(2)
 with col1:
     st.image("MYPARENTHELPERS_512x512.png", width=80)
 with col2:
