@@ -3,10 +3,10 @@ from PIL import Image
 import os
 import json
 
+st.markdown("""
 st.title("Welcome to My Parent Helpers")
 st.image("MYPARENTHELPERS_512x512.png", width=80)
 
-    """
 Create personalized AI parenting assistants based on books, styles, or experts.
 Start by creating a profile with your parenting approach and your child’s details.
 """
