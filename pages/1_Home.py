@@ -1,34 +1,12 @@
 import streamlit as st
 import os
 import json
+from app_utils import apply_mobile_style
 
 # --- Global mobile “phone” container + theme + centered cards CSS ---
+apply_mobile_style()
 st.markdown("""
     <style>
-    /* page background */
-    body {
-      background: linear-gradient(135deg, #2fe273 0%, #09742a 100%) !important;
-      min-height: 100vh;
-    }
-    /* the “phone” wrapper */
-    .stApp {
-      background: linear-gradient(335deg, #2fe273 0%, #09742a 100%) !important;
-      border-radius: 32px;
-      max-width: 400px;
-      min-height: 100vh;
-      height: 100vh;
-      overflow-y: auto;
-      margin: 32px auto;
-      box-shadow: 0 8px 32px rgba(60,60,60,0.25),
-                  0 1.5px 8px rgba(30,90,40,0.06);
-      border: 3px solid #ffffff;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 10px;
-    }
-
-    /* two-column grid helper */
     .dashboard {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
