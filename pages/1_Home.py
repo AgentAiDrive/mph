@@ -38,7 +38,7 @@ st.markdown(
       margin: 4px 0 10px;
       text-align: center;
       letter-spacing: 0.5px;
-      background: rgba(255, 255, 255, 0.15);  /* Light translucent white */
+      background: #e8f5e9;  
       padding: 6px 12px;
       border-radius: 12px;
     }
