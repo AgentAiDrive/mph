@@ -3,8 +3,15 @@ import os
 
 KEY_FILE = "openai_key.txt"
 
-def load_api_key():
-    """Retrieve OpenAI API key from secrets, file, or sidebar input."""
+def load_api_key(use_sidebar: bool = True):
+    """Retrieve OpenAI API key.
+
+    The key is looked up from ``st.secrets``, environment variables and the
+    ``openai_key.txt`` file.  If none of those sources provide a value, a text
+    input is displayed for the user.  By default the input is placed in the
+    sidebar, but setting ``use_sidebar`` to ``False`` will render it on the main
+    page instead.
+    """
     if "openai_api_key" in st.session_state:
         return st.session_state.openai_api_key
 
@@ -19,8 +26,9 @@ def load_api_key():
         except Exception:
             key = None
     if not key:
-        key = st.sidebar.text_input("Enter OpenAI API Key", type="password")
-        remember = st.sidebar.checkbox("Remember key", key="remember_key")
+        container = st.sidebar if use_sidebar else st
+        key = container.text_input("Enter OpenAI API Key", type="password")
+        remember = container.checkbox("Remember key", key="remember_key")
         if key and remember:
             with open(KEY_FILE, "w") as f:
                 f.write(key.strip())
