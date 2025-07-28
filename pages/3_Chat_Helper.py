@@ -1,13 +1,13 @@
 import streamlit as st
-import json
-import os
+import openai
+import os, json
 from app_utils import load_api_key, apply_mobile_style
 
-# Apply mobile style and check API key
+st.set_page_config(page_title="Parent Chat", layout="centered")
 apply_mobile_style()
-api_key = load_api_key()
-if not api_key:
-    st.sidebar.error("OpenAI API key required.")
+openai.api_key = load_api_key(use_sidebar=False)
+if not openai.api_key:
+    st.error("OpenAI API key required.")
     st.stop()
 
 PROFILE_DIR = "profiles"
