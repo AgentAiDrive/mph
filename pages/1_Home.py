@@ -93,10 +93,10 @@ st.markdown("---")
 # --- Main page links as a 2×2 card grid ---
 st.markdown('<div class="dashboard">', unsafe_allow_html=True)
 pages = [
-    ("red",    "👤 PROFILES", "Create a new pAIrenting agent profile", "/Create_Profile", "NEW"),
-    ("blue",   "💬 CHAT",     "Chat with your pAIrent agent",           "/Chat_Helper",   "CHAT"),
-    ("green",  "📁 SAVED",    "View saved chats",                       "/Saved_Items",   "VIEW"),
-    ("purple", "🆘 SUPPORT",  "Get help & resources",                  "/Support",       "HELP"),
+    ("red",    "👤  PROFILES", "Create a new pAIrenting agent profile", "/Create_Profile", "NEW"),
+    ("blue",   "💬  CHAT",     "Chat with your pAIrent agent",           "/Chat_Helper",   "CHAT"),
+    ("green",  "📁  SAVED",    "View saved chats",                       "/Saved_Items",   "VIEW"),
+    ("purple", "🆘  SUPPORT",  "Get help & resources",                  "/Support",       "HELP"),
 ]
 
 for color, title, subtitle, link, btn in pages:
