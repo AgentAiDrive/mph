@@ -77,6 +77,7 @@ st.markdown("""
         background-color: rgba(255,255,255,0.25);
     }
  """, unsafe_allow_html=True)
+st.image("MYPARENTHELPERS_512x512.png", width=80)
 # --- Main page links as a 2×2 card grid ---
 st.markdown('<div class="dashboard">', unsafe_allow_html=True)
 
