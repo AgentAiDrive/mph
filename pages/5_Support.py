@@ -1,4 +1,7 @@
 import streamlit as st
+from app_utils import apply_mobile_style
+
+apply_mobile_style()
 
 st.title("🆘 Support & Help")
 st.markdown("""
