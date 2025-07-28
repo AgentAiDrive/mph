@@ -1,50 +1,73 @@
 import streamlit as st
-from PIL import Image
 import os
 import json
 
+# --- Styles for “cards” ---
+st.markdown("""
+    <style>
+      .card {
+        background-color: #f0f4f8;
+        padding: 16px;
+        border-radius: 12px;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        margin-bottom: 16px;
+      }
+      .card-blue { background-color: #e3f2fd; }
+      .card-green { background-color: #e8f5e9; }
+    </style>
+""", unsafe_allow_html=True)
 
+
+# --- Header with logo and title ---
 col1, col2 = st.columns(2)
 with col1:
     st.image("MYPARENTHELPERS_512x512.png", width=80)
 with col2:
-    st.header ("Pairents Agents")
+    st.header("pAIrents Agents")
 st.markdown("---")
 
+
+# --- Intro text ---
+st.markdown(
+    """
+    Create personalized “pAIrents agents” personas based on books, 
+    styles, or experts within a context-prompt generator.
+    """
+)
+st.markdown("---")
+
+
+# --- Navigation links (4 columns) ---
 col1, col2, col3, col4 = st.columns(4)
 with col1:
     st.page_link("pages/2_Create_Profile.py", label="Create Profile", icon="🧬")
 with col2:
-    st.page_link("pages/3_Chat_Helper.py", label="Parent Chat", icon="💬")
+    st.page_link("pages/3_Chat_Helper.py",   label="Parent Chat",    icon="💬")
 with col3:
-    st.page_link("pages/4_Saved_Items.py", label="Saved Items", icon="📁")
+    st.page_link("pages/4_Saved_Items.py",   label="Saved Items",    icon="📁")
 with col4:
-    st.page_link("pages/5_Support.py", label="Support", icon="🆘")
+    st.page_link("pages/5_Support.py",       label="Support",        icon="🆘")
 st.markdown("---")
 
-st.markdown("""
-Create personalized AI parenting assistants based on books, styles, or experts.
-Start by creating a profile with your parenting approach and your child’s details.
-"""
 
-    st.header ("Pairents Agents")       
-)
+# --- Active profile display ---
 active_profile = st.session_state.get("active_profile")
 if active_profile:
-    name = active_profile.get("profile_name") or active_profile.get(
-        "agent_role", "Profile"
-    )
+    name = active_profile.get("profile_name") or active_profile.get("agent_role", "Profile")
     st.subheader(f"🟢 Active Profile: {name}")
 else:
     st.subheader("No profile active.")
-
-PROFILE_DIR = "profiles"
-CHAT_HISTORY_PATH = "chat_history.json"
-
 st.markdown("---")
+
+
+# --- Paths for profiles and chat history ---
+PROFILE_DIR        = "profiles"
+CHAT_HISTORY_PATH  = "chat_history.json"
+
 col1, col2 = st.columns(2)
 
 with col1:
+    st.markdown('<div class="card card-blue">', unsafe_allow_html=True)
     st.markdown("### Saved Profiles")
     profiles = []
     if os.path.isdir(PROFILE_DIR):
@@ -56,15 +79,21 @@ with col1:
             st.markdown(f"- {p}")
     else:
         st.write("None")
+    st.markdown("</div>", unsafe_allow_html=True)
 
 with col2:
+    st.markdown('<div class="card card-green">', unsafe_allow_html=True)
     st.markdown("### Saved Chats")
     if os.path.exists(CHAT_HISTORY_PATH):
         try:
-            history = json.load(open(CHAT_HISTORY_PATH))
-            for key in history.keys():
-                st.markdown(f"- {key} ({len(history[key])} messages)")
+            with open(CHAT_HISTORY_PATH) as f:
+                history = json.load(f)
+            for key, messages in history.items():
+                st.markdown(f"- {key} ({len(messages)} messages)")
         except Exception as e:
             st.write(f"Error reading chat history: {e}")
     else:
         st.write("None")
+    st.markdown("</div>", unsafe_allow_html=True)
+
+st.markdown("---")
