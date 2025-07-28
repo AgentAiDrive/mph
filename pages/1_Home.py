@@ -52,23 +52,23 @@ st.markdown("""
     .purple { background-color: #6a4c93; }
 
     .card h2 {
-        margin: 0 0 8px;
+        margin: 0 0 8px 8px;
         font-size: 20px;
     }
     .card small {
         display: block;
-        margin-bottom: 16px;
+        margin-bottom: 6px;
         font-size: 14px;
         opacity: 0.9;
     }
     .card a {
         display: inline-block;
         background-color: rgba(255,255,255,0.15);
-        border-radius: 8px;
-        padding: 8px 14px;
-        font-size: 14px;
+        border-radius: 20px;
+        padding: 8px 8px;
+        font-size: 16px;
         color: white;
-        text-decoration: none;
+        text-decoration: overline underline;
         transition: background-color 0.2s ease;
     }
     .card a:hover {
