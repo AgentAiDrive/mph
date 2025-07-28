@@ -3,7 +3,10 @@ from PIL import Image
 import os
 import json
 
-st.title("MYPARENTHELPERS_512x512.png", width=80, "Welcome to My Parent Helpers")
+col1, col2 = st.columns(2)
+with col1:
+st.title("Welcome to My Parent Helpers")
+with col2:
 st.image("MYPARENTHELPERS_512x512.png", width=80)
 st.markdown(
     """
