@@ -86,7 +86,7 @@ with col2:
     st.markdown(
      '<h3 style="margin:0; font-size:20px;">My Parent Helpers</h3>',
    unsafe_allow_html=True)
- st.markdown("---")
+st.markdown("---")
 
 # --- Main page links as a 2×2 card grid ---
 st.markdown('<div class="dashboard">', unsafe_allow_html=True)
