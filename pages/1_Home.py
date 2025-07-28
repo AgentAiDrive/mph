@@ -4,13 +4,15 @@ import os
 import json
 
 st.title("🏠 Welcome to My Parent Helpers")
-st.image("MYPARENTHELPERS_512x512.png", width=160)
+st.image("MYPARENTHELPERS_512x512.png", width=80)
 st.markdown(
     """
 Create personalized AI parenting assistants based on books, styles, or experts.
 Start by creating a profile with your parenting approach and your child’s details.
 """
 )
+st.header ("🏠 Welcome to My Parent Helpers")
+
 col1, col2 = st.columns(2)
 with col1:
     st.page_link("pages/2_Create_Profile.py", label="Create Profile", icon="🧬")
