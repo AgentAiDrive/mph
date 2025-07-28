@@ -11,6 +11,7 @@ Start by creating a profile with your parenting approach and your child’s deta
 """
 )
 st.header ("Shortcuts")
+
 col1, col2, col3, col4 = st.columns(2)
 with col1:
     st.page_link("pages/2_Create_Profile.py", label="Create Profile", icon="🧬")
