@@ -53,6 +53,7 @@ st.markdown("""
 
     .card h2 {
         margin: 0 0 8px 8px;
+        text-decoration: overline underline;
         font-size: 20px;
     }
     .card small {
@@ -68,7 +69,7 @@ st.markdown("""
         padding: 8px 8px;
         font-size: 16px;
         color: white;
-        text-decoration: overline underline;
+        text-decoration: none;
         transition: background-color 0.2s ease;
     }
     .card a:hover {
