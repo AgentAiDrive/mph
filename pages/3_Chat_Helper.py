@@ -63,7 +63,7 @@ def build_system_message(profile: dict, response_type: str) -> str:
         fmt = profile.get("format_pref")
         if fmt:
             lines.append(f"Formatting Preference: {fmt}")
-@@ -51,59 +82,74 @@ def get_active_profile():
+def get_active_profile():
 
 def load_chat_history(profile_name):
     if os.path.exists(CHAT_HISTORY_PATH):
