@@ -11,17 +11,18 @@ Create personalized AI parenting assistants based on books, styles, or experts.
 Start by creating a profile with your parenting approach and your child’s details.
 """
 )
-
-col1, col2, col3, col4 = st.columns(4)
+col1, col2 = st.columns(2)
 with col1:
     st.page_link("pages/2_Create_Profile.py", label="Create Profile", icon="🧬")
 with col2:
     st.page_link("pages/3_Chat_Helper.py", label="Parent Chat", icon="💬")
-with col3:
-    st.page_link("pages/4_Saved_Items.py", label="Saved Items", icon="📁")
-with col4:
-    st.page_link("pages/5_Support.py", label="Support", icon="🆘")
+st.markdown("---")
 
+col1, col2 = st.columns(2)
+with col1:
+    st.page_link("pages/4_Saved_Items.py", label="Saved Items", icon="📁")
+with col2:
+    st.page_link("pages/5_Support.py", label="Support", icon="🆘")
 st.markdown("---")
 
 active_profile = st.session_state.get("active_profile")
