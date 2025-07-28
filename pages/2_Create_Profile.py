@@ -4,8 +4,16 @@ from typing import List
 import streamlit as st
 import openai
 
-# OpenAI key from Streamlit secrets
-openai.api_key = st.secrets["openai"]["api_key"]
+if "openai" in st.secrets and "api_key" in st.secrets["openai"]:
+    openai.api_key = st.secrets["openai"]["api_key"]
+else:
+    openai.api_key = os.getenv("OPENAI_API_KEY", "")
+
+if not openai.api_key:
+    st.error(
+        "OpenAI API key not configured. Please add it to your Streamlit secrets (in secrets.toml under [openai] api_key) or set the OPENAI_API_KEY environment variable."
+    )
+    st.stop()
 
 # Directory for storing saved agent profiles
 MEMORY_DIR = "memory_profiles"
