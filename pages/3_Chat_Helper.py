@@ -7,6 +7,45 @@ openai.api_key = st.secrets["openai"]["api_key"]
 PROFILE_PATH = "profiles.json"
 CHAT_HISTORY_PATH = "chat_history.json"
 
+
+def build_system_message(profile: dict, response_type: str) -> str:
+    """Construct a system prompt based on old or new profile formats."""
+    # New advanced profile format
+    if "agent_type" in profile:
+        lines = [
+            f"Agent Type: {profile.get('agent_type')}",
+            f"Agent Role: {profile.get('agent_role')}",
+            f"Tone: {profile.get('tone')}",
+        ]
+        persona = profile.get("persona_descriptions")
+        if persona:
+            lines.append(f"Persona: {persona}")
+        tools = ", ".join(profile.get("tools", []))
+        if tools:
+            lines.append(f"Tools: {tools}")
+        modes = ", ".join(profile.get("interactive_modes", []))
+        if modes:
+            lines.append(f"Interactive Modes: {modes}")
+        intents = ", ".join(profile.get("intent_shortcuts", []))
+        if intents:
+            lines.append(f"Intent Shortcuts: {intents}")
+        fmt = profile.get("format_pref")
+        if fmt:
+            lines.append(f"Formatting Preference: {fmt}")
+        if profile.get("external_data"):
+            lines.append("External Data Access: Enabled")
+        lines.append(f"Respond with a {response_type}-type answer.")
+        return "\n".join(lines)
+
+    # Original basic profile format
+    return (
+        f"You are a parenting assistant using the \"{profile['source_name']}\" "
+        f"({profile['source_type']}) style.\n"
+        f"Respond with a {response_type}-type answer suitable for a child age "
+        f"{profile['child_age']}.\n"
+        f"Use parent name: {profile['parent_name']}, and child name: {profile['child_name']}"
+    )
+
 def get_active_profile():
     return st.session_state.get("active_profile", None)
 
@@ -33,7 +72,8 @@ if not profile:
     st.warning("Please load a profile first.")
     st.stop()
 
-st.subheader(f"👨‍👩‍👧 Talking as: {profile['profile_name']}")
+display_name = profile.get('profile_name') or profile.get('agent_role', 'Profile')
+st.subheader(f"👨‍👩‍👧 Talking as: {display_name}")
 query = st.text_area("What's your parenting challenge?")
 col1, col2, col3, col4, col5 = st.columns(5)
 response_type = None
@@ -44,12 +84,10 @@ if col4.button("Support"): response_type = "Support"
 if col5.button("Resolve"): response_type = "Resolve"
 
 if response_type and query:
-    system_message = f"""You are a parenting assistant using the "{profile['source_name']}" ({profile['source_type']}) style.
-Respond with a {response_type}-type answer suitable for a child age {profile['child_age']}.
-Use parent name: {profile['parent_name']}, and child name: {profile['child_name']}."""
+    system_message = build_system_message(profile, response_type)
 
     with st.spinner("Thinking..."):
-        completion = openai.chat.completions.create(
+        completion = openai.ChatCompletion.create(
             model="gpt-4o",
             messages=[
                 {"role": "system", "content": system_message},
@@ -59,10 +97,12 @@ Use parent name: {profile['parent_name']}, and child name: {profile['child_name'
         reply = completion.choices[0].message.content
         st.markdown("#### 📥 Response")
         st.write(reply)
-        save_chat(profile['profile_name'], query, reply)
+        profile_key = profile.get('profile_name') or f"{profile.get('agent_type','')}_{profile.get('agent_role','default')}"
+        save_chat(profile_key, query, reply)
 
 with st.expander("🕓 View Chat History"):
-    history = load_chat_history(profile['profile_name'])
+    profile_key = profile.get('profile_name') or f"{profile.get('agent_type','')}_{profile.get('agent_role','default')}"
+    history = load_chat_history(profile_key)
     for item in reversed(history[-10:]):
         st.markdown(f"**You:** {item['q']}")
         st.markdown(f"**Helper:** {item['a']}")
