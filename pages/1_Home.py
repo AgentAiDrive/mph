@@ -80,7 +80,7 @@ st.markdown("""
         width: 100%;
         display: flex;
         justify-content: space-around;
-        background: #ffffff;
+        background: #43aa8b;
         padding: 12px 0;
         border-bottom: 1px solid #eee;
         margin-bottom: 16px;
@@ -88,7 +88,7 @@ st.markdown("""
     .nav-link {
         font-size: 16px;
         text-decoration: none;
-        color: #333;
+        color: #ffffff;
         padding: 8px 12px;
         border-radius: 8px;
         transition: background-color 0.2s ease;
