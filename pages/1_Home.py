@@ -40,26 +40,27 @@ st.markdown("""
     /* card base */
     .card {
         border-radius: 16px;
-        padding: 24px 16px;
+        padding: 10px 10px;
         color: white;
         text-align: center;
         box-shadow: 0 4px 10px rgba(0,0,0,0.15);
     }
     /* card colors */
-    .red    { background-color: #f94144; }
-    .blue   { background-color: #577590; }
-    .green  { background-color: #43aa8b; }
-    .purple { background-color: #6a4c93; }
+    .blue   { background-color: #64B5F6; }  /* sky blue */
+    .red    { background-color: #E57373; }  /* soft red */
+    .green  { background-color: #81C784; }  /* mint green */
+    .purple { background-color: #BA68C8; }  /* lavender */
 
     .card h2 {
         margin: 0 0 0px 0px;
-        text-decoration: overline underline;
+        text-align: center;
+        text-decoration: none;
         font-size: 24px;
     }
     .card small {
         display: block;
         margin-bottom: 6px;
-        font-size: 20px;
+        font-size: 18px;
         opacity: 0.9;
     }
     .card a {
@@ -82,15 +83,15 @@ st.markdown("""
         display: flex;
         justify-content: space-around;
         background: #43aa8b;
-        padding: 12px 0;
-        border-bottom: 1px solid #eee;
-        margin-bottom: 16px;
+        padding: 12px 12px;
+        border-bottom: 3px solid #eee;
+        margin-bottom: 4px;
     }
     .nav-link {
         font-size: 16px;
         text-decoration: none;
         color: #ffffff;
-        padding: 8px 12px;
+        padding: 8px 8px;
         border-radius: 8px;
         transition: background-color 0.2s ease;
     }
