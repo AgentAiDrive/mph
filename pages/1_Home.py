@@ -1,53 +1,67 @@
 import streamlit as st
-import os
-import json
 
-# --- Styles for “card container” ---
+# --- Custom CSS for styling ---
 st.markdown("""
     <style>
-      .card-container {
-        background-color: #e8f5e9;     /* light green */
-        padding: 16px;
-        border-radius: 12px;
-        box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-        margin-bottom: 16px;
-      }
+    .dashboard {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+        padding: 10px;
+    }
+    .card {
+        background-color: #f0f4f8;
+        padding: 20px;
+        border-radius: 16px;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        color: white;
+        text-align: center;
+        font-weight: 600;
+        font-size: 18px;
+    }
+    .red { background-color: #f94144; }
+    .blue { background-color: #577590; }
+    .orange { background-color: #f3722c; }
+    .purple { background-color: #6a4c93; }
+    .teal { background-color: #43aa8b; }
+    .green { background-color: #90be6d; }
     </style>
 """, unsafe_allow_html=True)
 
+# --- Dashboard Cards ---
+st.markdown('<div class="dashboard">', unsafe_allow_html=True)
 
-# ... your header / nav / active profile code here ...
-
-
-# --- Wrapped card container for both columns ---
-st.markdown('<div class="card-container">', unsafe_allow_html=True)
-
-col1, col2 = st.columns(2)
-
-with col1:
-    st.markdown("### Saved Profiles")
-    profiles = []
-    if os.path.isdir("profiles"):
-        for fn in os.listdir("profiles"):
-            if fn.endswith(".json"):
-                profiles.append(fn[:-5])
-    if profiles:
-        for p in profiles:
-            st.markdown(f"- {p}")
-    else:
-        st.write("None")
-
-with col2:
-    st.markdown("### Saved Chats")
-    if os.path.exists("chat_history.json"):
-        try:
-            with open("chat_history.json") as f:
-                history = json.load(f)
-            for key, messages in history.items():
-                st.markdown(f"- {key} ({len(messages)} messages)")
-        except Exception as e:
-            st.write(f"Error reading chat history: {e}")
-    else:
-        st.write("None")
+st.markdown('<div class="card red">❤️ 124 bpm<br><small>Heart Rate</small></div>', unsafe_allow_html=True)
+st.markdown('<div class="card blue">😴 8 hrs<br><small>Sleep</small></div>', unsafe_allow_html=True)
+st.markdown('<div class="card orange">🔥 382 kcal<br><small>Calories</small></div>', unsafe_allow_html=True)
+st.markdown('<div class="card purple">🚶‍♂️ 10,701<br><small>Steps</small></div>', unsafe_allow_html=True)
+st.markdown('<div class="card teal">🏃‍♀️ 6.3 km<br><small>Activity</small></div>', unsafe_allow_html=True)
+st.markdown('<div class="card green">🧘 12.5 hrs<br><small>Mindfulness</small></div>', unsafe_allow_html=True)
 
 st.markdown('</div>', unsafe_allow_html=True)
+
+# --- Bottom Navigation ---
+st.markdown("""
+    <style>
+    .bottom-nav {
+        position: fixed;
+        bottom: 10px;
+        left: 0;
+        width: 100%;
+        display: flex;
+        justify-content: space-around;
+        background: #ffffff;
+        padding: 12px 0;
+        border-top: 1px solid #eee;
+    }
+    .nav-icon {
+        font-size: 24px;
+    }
+    </style>
+
+    <div class="bottom-nav">
+        <div class="nav-icon">🏠</div>
+        <div class="nav-icon">📊</div>
+        <div class="nav-icon">👤</div>
+    </div>
+""", unsafe_allow_html=True)
