@@ -77,40 +77,6 @@ st.markdown("""
         background-color: rgba(255,255,255,0.25);
     }
 
-    /* static top nav */
-    .top-nav {
-        width: 100%;
-        display: flex;
-        justify-content: space-around;
-        background: #43aa8b;
-        padding: 12px 12px;
-        border-bottom: 3px solid #eee;
-        margin-bottom: 4px;
-    }
-    .nav-link {
-        font-size: 16px;
-        text-decoration: none;
-        color: #ffffff;
-        padding: 8px 8px;
-        border-radius: 8px;
-        transition: background-color 0.2s ease;
-    }
-    .nav-link:hover {
-        background-color: rgba(0,0,0,0.05);
-    }
-    </style>
-""", unsafe_allow_html=True)
-
-
-# --- Top navigation ---
-st.markdown("""
-  <div class="top-nav">
-    <a href="Home" class="nav-link">HOME</a>
-    <a href="Chat_Helper"   class="nav-link">CHAT</a>
-    <a href="Saved_Items"   class="nav-link">SAVED</a>
-  </div>
-""", unsafe_allow_html=True)
-
 # --- Main page links as a 2×2 card grid ---
 st.markdown('<div class="dashboard">', unsafe_allow_html=True)
 
