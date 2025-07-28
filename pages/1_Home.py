@@ -21,17 +21,44 @@ st.markdown(
       align-items: center;
       padding: 10px 10px 10px;
     }
-      .card {
-        background-color: #f0f4f8;
-        padding: 16px;
-        border-radius: 12px;
-        box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-        margin-bottom: 16px;
-      }
-      .card-blue { background-color: #e3f2fd; }
-      .card-green { background-color: #e8f5e9; }
+    .card {
+      background-color: #f0f4f8;
+      padding: 16px;
+      border-radius: 12px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      margin-bottom: 16px;
+    }
+    .card-blue { background-color: #e3f2fd; }
+    .card-green { background-color: #e8f5e9; }
+      
+    .biglabel {
+      font-size: 1.1em;
+      font-weight: 800;
+      color: #ffffff;
+      margin: 4px 0 10px;
+      text-align: center;
+      letter-spacing: 0.5px;
+      background: rgba(255, 255, 255, 0.15);  /* Light translucent white */
+      padding: 6px 12px;
+      border-radius: 12px;
+    }
+    
+    .stButton>button{
+      border-radius:26px!important;
+      font-weight:700!important;
+      font-size:.7em!important;
+      padding:.4em 0!important;
+      background:#ffffff!important;
+      color:#000000!important;
+      margin:6px 0!important;
+      width:100%!important;
+  
+    /* --- Answer bubble --- */
+    .answer-box{background:#23683c;border-radius:12px;padding:14px 18px;color:#fff;white-space:pre-wrap;margin-top:8px;}
+    @media (max-height:750px){.stApp{min-height:640px;}}
+
     </style>
-""", unsafe_allow_html=True)
+    """, unsafe_allow_html=True)
 
 # --- Header with logo and title ---
 col1, col2 = st.columns(2)
