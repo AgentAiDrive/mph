@@ -104,9 +104,9 @@ st.markdown("""
 # --- Top navigation ---
 st.markdown("""
   <div class="top-nav">
-    <a href="?page=1_Home" class="nav-link">HOME</a>
-    <a href="?page=3_Chat_Helper"   class="nav-link">CHAT</a>
-    <a href="?page=4_Saved_Items"   class="nav-link">SAVED</a>
+    <a href="?Home" class="nav-link">HOME</a>
+    <a href="?Chat_Helper"   class="nav-link">CHAT</a>
+    <a href="?Saved_Items"   class="nav-link">SAVED</a>
   </div>
 """, unsafe_allow_html=True)
 
@@ -114,10 +114,10 @@ st.markdown("""
 st.markdown('<div class="dashboard">', unsafe_allow_html=True)
 
 pages = [
-    ("red",    "PROFILES", "Create a new pAIrenting agent profile", "/?page=2_Create_Profile", "NEW"),
-    ("blue",   "CHAT",    "Chat with your pAIrent agent",     "/?page=3_Chat_Helper",   "CHAT"),
-    ("green",  "SAVED",    "View saved chats",           "/?page=4_Saved_Items",   "VIEW"),
-    ("purple", "SUPPORT",        "Get help & resources",        "/?page=5_Support",       "HELP"),
+    ("red",    "PROFILES", "Create a new pAIrenting agent profile", "/?Create_Profile", "NEW"),
+    ("blue",   "CHAT",    "Chat with your pAIrent agent",     "/?Chat_Helper",   "CHAT"),
+    ("green",  "SAVED",    "View saved chats",           "/?Saved_Items",   "VIEW"),
+    ("purple", "SUPPORT",        "Get help & resources",        "/?_Support",       "HELP"),
 ]
 
 for color, title, subtitle, link, btn in pages:
