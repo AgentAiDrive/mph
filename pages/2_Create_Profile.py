@@ -1,82 +1,137 @@
+import os
+import json
+from typing import List
 import streamlit as st
-import json, os, uuid
-from PIL import Image
+import openai
 
-PROFILE_PATH = "profiles.json"
-IMAGE_DIR = "images"
-os.makedirs(IMAGE_DIR, exist_ok=True)
+# OpenAI key from Streamlit secrets
+openai.api_key = st.secrets["openai"]["api_key"]
 
-def load_profiles():
-    if os.path.exists(PROFILE_PATH):
-        with open(PROFILE_PATH) as f:
-            return json.load(f)
-    return []
+# Directory for storing saved agent profiles
+MEMORY_DIR = "memory_profiles"
+os.makedirs(MEMORY_DIR, exist_ok=True)
 
-def save_profiles(profiles):
-    with open(PROFILE_PATH, "w") as f:
-        json.dump(profiles, f, indent=2)
 
-def save_new_profile(profile):
-    profiles = load_profiles()
-    profiles.append(profile)
-    save_profiles(profiles)
+def generate_agent_response(config: dict, history: List[dict]) -> str:
+    """Generate a chat response from OpenAI using the given config and history."""
+    system_prompt = (
+        f"You are a {config['agent_type']} specializing in {config['agent_role']} "
+        f"with persona {config['persona_descriptions']}."
+    )
+    messages = [{'role': 'system', 'content': system_prompt}] + history
+    response = openai.ChatCompletion.create(
+        model="gpt-4o",
+        messages=messages,
+        temperature=config['temperature'],
+        max_tokens=500,
+    )
+    return response.choices[0].message.content
 
-st.title("🧬 Manage Parenting Profiles")
 
-with st.expander("➕ Create New Profile"):
-    with st.form("create_profile"):
-        profile = {
-            "source_type": st.selectbox("Parenting Source Type", ["Book", "Expert", "Style"]),
-            "source_name": st.text_input("Source Name"),
-            "child_age": st.number_input("Child’s Age", 0, 18),
-            "parent_name": st.text_input("Parent’s Name"),
-            "child_name": st.text_input("Child’s Name"),
-            "profile_name": st.text_input("Profile Name")
-        }
+st.title("🧬 Agent Builder")
 
-        uploaded_file = st.file_uploader("Upload Profile Picture", type=["png", "jpg", "jpeg"])
-        if uploaded_file:
-            file_ext = uploaded_file.name.split(".")[-1]
-            image_filename = f"{uuid.uuid4()}.{file_ext}"
-            image_path = os.path.join(IMAGE_DIR, image_filename)
-            with open(image_path, "wb") as f:
-                f.write(uploaded_file.read())
-            profile["image_path"] = image_path
-        else:
-            profile["image_path"] = None
+# Sidebar configuration UI
+with st.sidebar:
+    st.header("Agent Configuration")
+    agent_type = st.selectbox(
+        "Agent Type",
+        ["Parenting Coach", "Emotional Regulator", "Communication Trainer", "Cognitive Scaffold"],
+    )
+    agent_role = st.text_input("Agent Role (Task)", "e.g., De-escalate sibling rivalry")
+    persona = st.multiselect(
+        "Persona Styles",
+        ["Montessori", "Gentle Parenting", "Authoritative"],
+        help="Mix & match or upload custom notes below",
+    )
+    custom_notes = st.file_uploader("Upload Persona Notes (txt)", type=["txt"])
+    tools = st.multiselect(
+        "Tool Integrations",
+        ["Emotion Tracker", "Schedule Builder", "Story Generator", "Role-play Simulator"],
+    )
+    memory_option = st.radio("Memory Option", ["Session-only", "Persistent per profile"], index=0)
+    uploaded_docs = st.file_uploader("Upload Reference Documents", accept_multiple_files=True)
+    external_data = st.checkbox("Enable External Data Access", value=False)
+    st.markdown("---")
+    st.subheader("Prompt Controls")
+    temperature = st.slider("Temperature", 0.0, 1.0, 0.7)
+    verbosity = st.slider("Verbosity (max tokens)", 100, 2000, 500)
+    tone = st.selectbox("Tone", ["Nurturing", "Playful", "Firm"])
+    st.markdown("---")
+    st.subheader("Interaction Modes")
+    interactive_modes = st.multiselect(
+        "Modes",
+        ["Co-Play Simulation", "Role Reversal", "Story Prompting", "Joint Reflections"],
+    )
+    intent_shortcuts = st.multiselect(
+        "Intent Shortcuts",
+        [
+            "Connect",
+            "Grow",
+            "Explore",
+            "Resolve",
+            "Support + Ask",
+            "Imagine",
+            "Challenge",
+            "Reflect",
+            "Rehearse",
+        ],
+    )
+    format_pref = st.selectbox(
+        "Formatting",
+        ["List", "Table", "Steps", "Dialogue Script", "Visual Summary"],
+    )
+    enable_feedback = st.checkbox("Enable Feedback Loop", value=True)
+    audio_upload = st.file_uploader("Upload Audio for Voice Integration", type=["mp3", "wav"])
+    st.markdown("---")
+    save_profile = st.button("Save Profile")
 
-        if st.form_submit_button("💾 Save Profile"):
-            save_new_profile(profile)
-            st.success("✅ Profile saved.")
-            st.session_state.active_profile = profile
+# Save profile to disk when requested
+if save_profile:
+    profile = {
+        "agent_type": agent_type,
+        "agent_role": agent_role,
+        "persona_descriptions": persona,
+        "tools": tools,
+        "memory_option": memory_option,
+        "external_data": external_data,
+        "temperature": temperature,
+        "verbosity": verbosity,
+        "tone": tone,
+        "interactive_modes": interactive_modes,
+        "intent_shortcuts": intent_shortcuts,
+        "format_pref": format_pref,
+    }
+    fname = os.path.join(MEMORY_DIR, f"profile_{agent_type.replace(' ', '_')}.json")
+    with open(fname, "w") as f:
+        json.dump(profile, f)
+    st.sidebar.success(f"Profile saved to {fname}")
 
-st.subheader("📂 Your Saved Profiles")
-profiles = load_profiles()
-if "edit_index" not in st.session_state:
-    st.session_state.edit_index = None
+# Conversation history stored in the session
+if "history" not in st.session_state:
+    st.session_state.history = []
 
-if profiles:
-    for idx, p in enumerate(profiles):
-        col1, col2 = st.columns([7, 3])
-        with col1:
-            st.markdown(f"**{p['profile_name']}** — {p['source_type']}: _{p['source_name']}_ | Age: {p['child_age']}")
-            if p.get("image_path") and os.path.exists(p["image_path"]):
-                st.image(p["image_path"], width=80)
-        with col2:
-            if st.button("✏️ Edit", key=f"edit_{idx}"):
-                st.session_state.edit_index = idx
-            if st.button("🗑️ Delete", key=f"delete_{idx}"):
-                confirm = st.radio(f"Delete {p['profile_name']}?", ["No", "Yes"], index=0, key=f"confirm_{idx}")
-                if confirm == "Yes":
-                    if p.get("image_path") and os.path.exists(p["image_path"]):
-                        os.remove(p["image_path"])
-                    profiles.pop(idx)
-                    save_profiles(profiles)
-                    st.success("🗑️ Profile deleted.")
-                    st.session_state.edit_index = None
-                    st.experimental_rerun()
-            if st.button("📤 Load", key=f"load_{idx}"):
-                st.session_state.active_profile = p
-                st.success(f"✅ Loaded profile: {p['profile_name']}")
-else:
-    st.info("No saved profiles found.")
+st.header("Chat")
+user_input = st.text_input("Your message:")
+if st.button("Send") and user_input:
+    st.session_state.history.append({"role": "user", "content": user_input})
+    config = {
+        "agent_type": agent_type,
+        "agent_role": agent_role,
+        "persona_descriptions": persona,
+        "temperature": temperature,
+    }
+    with st.spinner("Generating response..."):
+        reply = generate_agent_response(config, st.session_state.history)
+    st.session_state.history.append({"role": "assistant", "content": reply})
+
+for msg in st.session_state.history:
+    if msg["role"] == "user":
+        st.markdown(f"**You:** {msg['content']}")
+    else:
+        st.markdown(f"**Agent:** {msg['content']}")
+
+# Simple feedback loop
+if enable_feedback and st.session_state.history:
+    rating = st.slider("Rate the last response", 1, 5, key="feedback_slider")
+    if st.button("Submit Feedback"):
+        st.success(f"Thanks for your feedback: {rating}/5")
