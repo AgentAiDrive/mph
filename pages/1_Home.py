@@ -3,7 +3,19 @@ from PIL import Image
 import os
 import json
 
-st.header ("Pairents Agents")
+
+col1, col2, col3, col4 = st.columns(4)
+with col1:
+    st.header ("Pairents Agents")
+with col2:
+    st.image("MYPARENTHELPERS_512x512.png", width=80)
+with col3:
+    st.page_link("pages/4_Saved_Items.py", label="Saved Items", icon="📁")
+with col4:
+    st.page_link("pages/5_Support.py", label="Support", icon="🆘")
+st.markdown("---")
+
+
 col1, col2, col3, col4 = st.columns(4)
 with col1:
     st.page_link("pages/2_Create_Profile.py", label="Create Profile", icon="🧬")
