@@ -103,9 +103,9 @@ st.markdown("""
 # --- Top navigation ---
 st.markdown("""
   <div class="top-nav">
-    <a href="?page=2_Create_Profile" class="nav-link">Home</a>
-    <a href="?page=3_Chat_Helper"   class="nav-link">Chat</a>
-    <a href="?page=4_Saved_Items"   class="nav-link">Saved</a>
+    <a href="?page=1_Create_Profile" class="nav-link">HOME</a>
+    <a href="?page=3_Chat_Helper"   class="nav-link">CHAT</a>
+    <a href="?page=4_Saved_Items"   class="nav-link">SAVED</a>
   </div>
 """, unsafe_allow_html=True)
 
@@ -162,10 +162,10 @@ st.markdown('</div>', unsafe_allow_html=True)
 st.markdown('<div class="dashboard">', unsafe_allow_html=True)
 
 pages = [
-    ("red",    "🧬 Create Profile", "Define a new parenting profile", "/?page=2_Create_Profile", "Go"),
-    ("blue",   "💬 Parent Chat",    "Chat with your AI agent",     "/?page=3_Chat_Helper",   "Chat"),
-    ("green",  "📁 Saved Items",    "Browse saved data",           "/?page=4_Saved_Items",   "View"),
-    ("purple", "🆘 Support",        "Get help & resources",        "/?page=5_Support",       "Help"),
+    ("red",    "PROFILES", "Create a new pAIrenting agent profile", "/?page=2_Create_Profile", "NEW"),
+    ("blue",   "CHAT",    "Chat with your pAIrent agent",     "/?page=3_Chat_Helper",   "CHAT"),
+    ("green",  "SAVED",    "View saved chats",           "/?page=4_Saved_Items",   "VIEW"),
+    ("purple", "SUPPORT",        "Get help & resources",        "/?page=5_Support",       "HELP"),
 ]
 
 for color, title, subtitle, link, btn in pages:
