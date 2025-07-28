@@ -64,14 +64,16 @@ st.markdown("---")
 PROFILE_DIR        = "profiles"
 CHAT_HISTORY_PATH  = "chat_history.json"
 
+# --- Wrapped card container for both columns ---
+st.markdown('<div class="card-container">', unsafe_allow_html=True)
+
 col1, col2 = st.columns(2)
 
 with col1:
-    st.markdown('<div class="card card-blue">', unsafe_allow_html=True)
     st.markdown("### Saved Profiles")
     profiles = []
-    if os.path.isdir(PROFILE_DIR):
-        for fn in os.listdir(PROFILE_DIR):
+    if os.path.isdir("profiles"):
+        for fn in os.listdir("profiles"):
             if fn.endswith(".json"):
                 profiles.append(fn[:-5])
     if profiles:
@@ -79,14 +81,12 @@ with col1:
             st.markdown(f"- {p}")
     else:
         st.write("None")
-    st.markdown("</div>", unsafe_allow_html=True)
 
 with col2:
-    st.markdown('<div class="card card-green">', unsafe_allow_html=True)
     st.markdown("### Saved Chats")
-    if os.path.exists(CHAT_HISTORY_PATH):
+    if os.path.exists("chat_history.json"):
         try:
-            with open(CHAT_HISTORY_PATH) as f:
+            with open("chat_history.json") as f:
                 history = json.load(f)
             for key, messages in history.items():
                 st.markdown(f"- {key} ({len(messages)} messages)")
@@ -94,6 +94,5 @@ with col2:
             st.write(f"Error reading chat history: {e}")
     else:
         st.write("None")
-    st.markdown("</div>", unsafe_allow_html=True)
 
-st.markdown("---")
+st.markdown('</div>', unsafe_allow_html=True)
