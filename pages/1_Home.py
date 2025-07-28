@@ -3,7 +3,7 @@ from PIL import Image
 import os
 import json
 
-st.header ("Shortcuts")
+st.header ("Pairents Agents")
 col1, col2, col3, col4 = st.columns(4)
 with col1:
     st.page_link("pages/2_Create_Profile.py", label="Create Profile", icon="🧬")
@@ -14,8 +14,6 @@ with col3:
 with col4:
     st.page_link("pages/5_Support.py", label="Support", icon="🆘")
 st.markdown("---")
-
-st.title("Welcome to My Parent Helpers")
 st.image("MYPARENTHELPERS_512x512.png", width=80)
 st.markdown("""
 Create personalized AI parenting assistants based on books, styles, or experts.
