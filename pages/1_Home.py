@@ -76,7 +76,7 @@ st.markdown("""
     .card a:hover {
         background-color: rgba(255,255,255,0.25);
     }
-
+ """, unsafe_allow_html=True)
 # --- Main page links as a 2×2 card grid ---
 st.markdown('<div class="dashboard">', unsafe_allow_html=True)
 
