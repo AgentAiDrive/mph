@@ -1,6 +1,9 @@
 import streamlit as st
 import os
 import json
+from app_utils import apply_mobile_style
+
+apply_mobile_style()
 
 st.title("📁 Saved Items")
 
@@ -39,9 +42,15 @@ else:
         chats = all_history.get(pname, [])
         if chats:
             for item in reversed(chats[-10:]):
-                st.markdown(f"**You:** {item['q']}")
-                st.markdown(f"**Helper:** {item['a']}")
-                st.markdown('---')
+                st.markdown(f"<p style='color:#fff;'><strong>You:</strong> {item['q']}</p>", unsafe_allow_html=True)
+                st.markdown(f"<div class='answer-box'>{item['a']}</div>", unsafe_allow_html=True)
+                st.markdown('<hr>', unsafe_allow_html=True)
+            if st.button('Delete History'):
+                all_history[pname] = []
+                with open(CHAT_HISTORY_PATH, 'w') as f:
+                    json.dump(all_history, f, indent=2)
+                st.success('History cleared!')
+                st.experimental_rerun()
         else:
             st.write('No chat history for this profile.')
     else:
