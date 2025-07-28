@@ -4,17 +4,12 @@ import os
 import json
 
 
-col1, col2, col3, col4 = st.columns(4)
+col1, col2, col3, col4 = st.columns(2)
 with col1:
-    st.header ("Pairents Agents")
-with col2:
     st.image("MYPARENTHELPERS_512x512.png", width=80)
-with col3:
-    st.page_link("pages/4_Saved_Items.py", label="Saved Items", icon="📁")
-with col4:
-    st.page_link("pages/5_Support.py", label="Support", icon="🆘")
+with col2:
+    st.header ("Pairents Agents")
 st.markdown("---")
-
 
 col1, col2, col3, col4 = st.columns(4)
 with col1:
@@ -26,13 +21,14 @@ with col3:
 with col4:
     st.page_link("pages/5_Support.py", label="Support", icon="🆘")
 st.markdown("---")
-st.image("MYPARENTHELPERS_512x512.png", width=80)
+
 st.markdown("""
 Create personalized AI parenting assistants based on books, styles, or experts.
 Start by creating a profile with your parenting approach and your child’s details.
 """
-)
 
+    st.header ("Pairents Agents")       
+)
 active_profile = st.session_state.get("active_profile")
 if active_profile:
     name = active_profile.get("profile_name") or active_profile.get(
