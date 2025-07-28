@@ -12,69 +12,54 @@ Start by creating a profile with your parenting approach and your child’s deta
 """
 )
 
+col1, col2, col3, col4 = st.columns(4)
+with col1:
+    st.page_link("pages/2_Create_Profile.py", label="Create Profile", icon="🧬")
+with col2:
+    st.page_link("pages/3_Chat_Helper.py", label="Parent Chat", icon="💬")
+with col3:
+    st.page_link("pages/4_Saved_Items.py", label="Saved Items", icon="📁")
+with col4:
+    st.page_link("pages/5_Support.py", label="Support", icon="🆘")
+
 st.markdown("---")
 
+active_profile = st.session_state.get("active_profile")
+if active_profile:
+    name = active_profile.get("profile_name") or active_profile.get(
+        "agent_role", "Profile"
+    )
+    st.subheader(f"🟢 Active Profile: {name}")
+else:
+    st.subheader("No profile active.")
+
+PROFILE_DIR = "profiles"
+CHAT_HISTORY_PATH = "chat_history.json"
+
+st.markdown("---")
 col1, col2 = st.columns(2)
 
 with col1:
-    st.subheader("⚡ Quick Modes")
-    modes = ["Explore", "Connect", "Grow", "Support", "Resolve"]
-    for m in modes:
-        if st.button(m):
-            st.session_state["selected_mode"] = m
-            st.switch_page("pages/3_Chat_Helper.py")
+    st.markdown("### Saved Profiles")
+    profiles = []
+    if os.path.isdir(PROFILE_DIR):
+        for fn in os.listdir(PROFILE_DIR):
+            if fn.endswith(".json"):
+                profiles.append(fn[:-5])
+    if profiles:
+        for p in profiles:
+            st.markdown(f"- {p}")
+    else:
+        st.write("None")
 
 with col2:
-    st.subheader("👤 Active Profile")
-    profile = st.session_state.get("active_profile")
-    if profile:
-        name = profile.get("profile_name") or profile.get("agent_role", "Profile")
-        st.write(name)
-        if st.button("Open Chat"):
-            st.switch_page("pages/3_Chat_Helper.py")
-    else:
-        st.write("No profile loaded.")
-
-st.markdown("---")
-
-col3, col4 = st.columns(2)
-
-with col3:
-    st.subheader("📁 Saved Profiles")
-    profile_dir = "profiles"
-    if os.path.isdir(profile_dir):
-        files = [f for f in os.listdir(profile_dir) if f.endswith(".json")]
-        if files:
-            for f in files:
-                display = os.path.splitext(f)[0]
-                if st.button(display, key=f"prof_{f}"):
-                    try:
-                        data = json.load(open(os.path.join(profile_dir, f)))
-                        st.session_state["active_profile"] = data
-                        st.success(f"Loaded {display}")
-                    except Exception as e:
-                        st.error(f"Could not load {f}: {e}")
-        else:
-            st.write("No saved profiles.")
-    else:
-        st.write("No saved profiles.")
-
-with col4:
-    st.subheader("🗂️ Saved Chats")
-    hist_path = "chat_history.json"
-    if os.path.exists(hist_path):
+    st.markdown("### Saved Chats")
+    if os.path.exists(CHAT_HISTORY_PATH):
         try:
-            history = json.load(open(hist_path))
-            if history:
-                for pname in history.keys():
-                    st.write(pname)
-            else:
-                st.write("No chats saved.")
+            history = json.load(open(CHAT_HISTORY_PATH))
+            for key in history.keys():
+                st.markdown(f"- {key} ({len(history[key])} messages)")
         except Exception as e:
-            st.error(f"Could not read chat history: {e}")
+            st.write(f"Error reading chat history: {e}")
     else:
-        st.write("No chats found.")
-
-st.markdown("---")
-if st.button("🚀 Create Profile"):
-    st.switch_page("pages/2_Create_Profile.py")
+        st.write("None")
