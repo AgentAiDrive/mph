@@ -65,7 +65,7 @@ col1, col2 = st.columns(2)
 with col1:
     st.image("MYPARENTHELPERS_512x512.png", width=80)
 with col2:
-    st.header("pAIrents Agents")
+    st.markdown("<div class='biglabel'>pAIrents Agents</div>", unsafe_allow_html=True)
 st.markdown("---")
 
 
