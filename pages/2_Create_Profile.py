@@ -5,8 +5,98 @@ import os
 from typing import List
 from app_utils import load_api_key, apply_mobile_style
 
-# ---------- API Key Configuration ---------- #
+# --- Global mobile “phone” container + theme + centered cards CSS ---
+st.markdown("""
+    <style>
+    /* page background */
+    body {
+      background: linear-gradient(135deg, #2fe273 0%, #09742a 100%) !important;
+      min-height: 100vh;
+    }
+    /* the “phone” wrapper */
+    .stApp {
+      background: linear-gradient(335deg, #2fe273 0%, #09742a 100%) !important;
+      border-radius: 32px;
+      max-width: 400px;
+      min-height: 100vh;
+      height: 100vh;
+      overflow-y: auto;
+      margin: 32px auto;
+      box-shadow: 0 8px 32px rgba(60,60,60,0.25),
+                  0 1.5px 8px rgba(30,90,40,0.06);
+      border: 3px solid #ffffff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 10px;
+    }
+
+    /* two-column grid helper */
+    .dashboard {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      width: 100%;
+      padding: 10px 0;
+    }
+
+    /* card base with centered contents */
+    .card {
+      border-radius: 16px;
+      padding: 10px;
+      color: white;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    /* subtle bright palette */
+    .blue   { background-color: #64B5F6; }  /* sky blue */
+    .red    { background-color: #E57373; }  /* soft red */
+    .green  { background-color: #81C784; }  /* mint green */
+    .purple { background-color: #BA68C8; }  /* lavender */
+
+    .card h2 {
+      margin: 0;
+      font-size: 24px;
+    }
+    .card small {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 18px;
+      opacity: 0.9;
+    }
+    .card a {
+      display: inline-block;
+      background-color: rgba(255,255,255,0.15);
+      border-radius: 20px;
+      padding: 8px;
+      font-size: 16px;
+      color: black;
+      text-decoration: none;
+      transition: background-color 0.2s ease;
+      margin-top: 8px;
+    }
+    .card a:hover {
+      background-color: rgba(255,255,255,0.25);
+    }
+    </style>
+""", unsafe_allow_html=True)
+
 apply_mobile_style()
+
+# --- Logo + Title ---
+col1, col2 = st.columns([1, 4])
+with col1:
+    st.image("MYPARENTHELPERS_512x512.png", width=50)
+with col2:
+    st.markdown(
+        '<h3 style="margin:10px; font-size:20px;">My Parent Helpers</h3>',
+        unsafe_allow_html=True)
+st.markdown("---")
+
+# ---------- API Key Configuration ---------- #
 api_key = load_api_key(use_sidebar=False)
 if not api_key:
     st.error("OpenAI API key required.")
@@ -19,8 +109,9 @@ MEMORY_DIR = 'memory_profiles'
 os.makedirs(PROFILE_DIR, exist_ok=True)
 os.makedirs(MEMORY_DIR, exist_ok=True)
 
-# Generate agent response
+
 def generate_agent_response(config: dict, history: List[dict], docs_content: List[str]) -> str:
+    """Generate an assistant reply using OpenAI."""
     persona_desc = config.get('persona_descriptions', 'No persona notes')
     system_lines = [
         f"Agent Type: {config['agent_type']}",
@@ -47,8 +138,9 @@ def generate_agent_response(config: dict, history: List[dict], docs_content: Lis
     )
     return resp.choices[0].message.content
 
+
 # ---------- UI Setup ---------- #
-st.set_page_config(page_title='Parenting Agent', layout='centered')
+st.set_page_config(page_title='Parenting Agent', layout='wide')
 st.title('🤖 Parenting Agent')
 
 # Sidebar configuration form
@@ -68,9 +160,60 @@ with st.sidebar.form('config_form'):
         try:
             text = doc.read().decode('utf-8', errors='ignore')[:200]
             docs_content.append(f"{doc.name}: {text}...")
-        except:
+        except Exception:
             docs_content.append(f"{doc.name}: (binary)")
     external_data = st.checkbox('External Data Access')
     st.markdown('---')
     st.subheader('Prompt Controls')
     temperature = st.slider('Temperature', 0.0, 1.0, 0.7)
+    verbosity = st.slider('Max Tokens', 100, 2000, 500)
+    tone = st.selectbox('Tone', ['Nurturing', 'Playful', 'Firm'])
+    st.markdown('---')
+    st.subheader('Interactions')
+    interactive_modes = st.multiselect('Modes', ['Co-Play Simulation', 'Role Reversal', 'Story Prompting', 'Joint Reflections'])
+    intent_shortcuts = st.multiselect('Shortcuts', ['Connect', 'Grow', 'Explore', 'Resolve', 'Support + Ask', 'Imagine', 'Challenge', 'Reflect', 'Rehearse'])
+    format_pref = st.selectbox('Format', ['List', 'Table', 'Steps', 'Dialogue', 'Visual Summary'])
+    st.markdown('---')
+    enable_feedback = st.checkbox('Enable Feedback Loop', value=True)
+    audio_file = st.file_uploader('Upload Audio', type=['mp3','wav'])
+    save_profile = st.form_submit_button('Save Profile')
+
+
+if save_profile:
+    profile = {k: v for k, v in locals().items() if k in ['agent_type','agent_role','persona_styles','custom_notes_text','tools','memory_option','external_data','temperature','verbosity','tone','interactive_modes','intent_shortcuts','format_pref']}
+    fname = os.path.join(PROFILE_DIR, f"profile_{agent_type}_{agent_role}.json")
+    with open(fname, 'w') as f:
+        json.dump(profile, f)
+    st.sidebar.success(f'Saved: {fname}')
+
+# Load session history or persistent memory
+profile_key = f"{agent_type}_{agent_role}"
+mem_file = os.path.join(MEMORY_DIR, f"{profile_key}.json")
+if 'history' not in st.session_state:
+    if memory_option=='Persistent' and os.path.exists(mem_file):
+        st.session_state.history = json.load(open(mem_file))
+    else:
+        st.session_state.history = []
+
+# Chat interface
+st.header('Chat')
+user_input = st.text_input('Your message')
+if st.button('Send') and user_input:
+    st.session_state.history.append({'role':'user','content':user_input})
+    config = dict(agent_type=agent_type,agent_role=agent_role,persona_descriptions=persona_descriptions,tools=tools,external_data=external_data,temperature=temperature,verbosity=verbosity,tone=tone,interactive_modes=interactive_modes,intent_shortcuts=intent_shortcuts,format_pref=format_pref)
+    reply = generate_agent_response(config, st.session_state.history, docs_content)
+    st.session_state.history.append({'role':'assistant','content':reply})
+    if memory_option=='Persistent':
+        json.dump(st.session_state.history, open(mem_file,'w'))
+
+# Display conversation
+for msg in st.session_state.history:
+    speaker = 'You' if msg['role']=='user' else 'Agent'
+    st.markdown(f"**{speaker}:** {msg['content']}")
+
+# Feedback section
+if enable_feedback and st.session_state.history:
+    st.markdown('---')
+    rating = st.slider('Rate response',1,5)
+    if st.button('Submit Feedback'):
+        st.success(f'Thanks: {rating}/5')
