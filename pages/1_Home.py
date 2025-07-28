@@ -2,9 +2,25 @@ import streamlit as st
 import os
 import json
 
-# --- Styles for “cards” ---
-st.markdown("""
+st.markdown(
+    """
     <style>
+    body{background:linear-gradient(135deg,#2fe273 0%,#09742a 100%)!important;min-height:100vh;}
+    .stApp {
+      background: linear-gradient(335deg,#2fe273 0%,#09742a 100%)!important;
+      border-radius: 32px;
+      max-width: 400px;
+      min-height: 100vh;
+      height: 100vh;
+      overflow-y: auto;
+      margin: 32px auto;
+      box-shadow: 0 8px 32px rgba(60,60,60,.25), 0 1.5px 8px rgba(30,90,40,.06);
+      border: 3px solid #ffffff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 10px 10px 10px;
+    }
       .card {
         background-color: #f0f4f8;
         padding: 16px;
@@ -16,7 +32,6 @@ st.markdown("""
       .card-green { background-color: #e8f5e9; }
     </style>
 """, unsafe_allow_html=True)
-
 
 # --- Header with logo and title ---
 col1, col2 = st.columns(2)
