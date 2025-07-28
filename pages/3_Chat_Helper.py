@@ -1,11 +1,42 @@
 import streamlit as st
 import openai
 import os, json
+from app_utils import load_api_key, apply_mobile_style
 
-openai.api_key = st.secrets["openai"]["api_key"]
+st.set_page_config(page_title="Parent Chat", layout="centered")
+apply_mobile_style()
+openai.api_key = load_api_key()
+if not openai.api_key:
+    st.sidebar.error("OpenAI API key required.")
+    st.stop()
 
 PROFILE_PATH = "profiles.json"
 CHAT_HISTORY_PATH = "chat_history.json"
+
+# Response shortcut configuration
+SHORTCUTS = [
+    "💬 DEFAULT",
+    "🤝 CONNECT",
+    "🌱 GROW",
+    "🔍 EXPLORE",
+    "🛠 RESOLVE",
+    "❤ SUPPORT",
+]
+EMOJIS = {
+    "💬 DEFAULT": "💬",
+    "🤝 CONNECT": "🤝",
+    "🌱 GROW": "🌱",
+    "🔍 EXPLORE": "🔍",
+    "🛠 RESOLVE": "🛠",
+    "❤ SUPPORT": "❤",
+}
+EXTRA_MAP = {
+    "🤝 CONNECT": " Help explain with examples.",
+    "🌱 GROW": " Offer advanced strategies.",
+    "🔍 EXPLORE": " Facilitate age-appropriate Q&A.",
+    "🛠 RESOLVE": " Provide step-by-step resolution.",
+    "❤ SUPPORT": " Offer empathetic support.",
+}
 
 
 def build_system_message(profile: dict, response_type: str) -> str:
@@ -32,22 +63,7 @@ def build_system_message(profile: dict, response_type: str) -> str:
         fmt = profile.get("format_pref")
         if fmt:
             lines.append(f"Formatting Preference: {fmt}")
-        if profile.get("external_data"):
-            lines.append("External Data Access: Enabled")
-        lines.append(f"Respond with a {response_type}-type answer.")
-        return "\n".join(lines)
-
-    # Original basic profile format
-    return (
-        f"You are a parenting assistant using the \"{profile['source_name']}\" "
-        f"({profile['source_type']}) style.\n"
-        f"Respond with a {response_type}-type answer suitable for a child age "
-        f"{profile['child_age']}.\n"
-        f"Use parent name: {profile['parent_name']}, and child name: {profile['child_name']}"
-    )
-
-def get_active_profile():
-    return st.session_state.get("active_profile", None)
+@@ -51,59 +82,74 @@ def get_active_profile():
 
 def load_chat_history(profile_name):
     if os.path.exists(CHAT_HISTORY_PATH):
@@ -73,32 +89,47 @@ if not profile:
     st.stop()
 
 display_name = profile.get('profile_name') or profile.get('agent_role', 'Profile')
-st.subheader(f"👨‍👩‍👧 Talking as: {display_name}")
+st.markdown(f"**Talking as:** {display_name}")
+
+st.session_state.setdefault("shortcut", "💬 DEFAULT")
+st.session_state.setdefault("last_answer", "")
+
 query = st.text_area("What's your parenting challenge?")
-col1, col2, col3, col4, col5 = st.columns(5)
-response_type = None
-if col1.button("Explore"): response_type = "Explore"
-if col2.button("Connect"): response_type = "Connect"
-if col3.button("Grow"):    response_type = "Grow"
-if col4.button("Support"): response_type = "Support"
-if col5.button("Resolve"): response_type = "Resolve"
 
-if response_type and query:
-    system_message = build_system_message(profile, response_type)
+if st.session_state.last_answer:
+    st.markdown(f"<div class='answer-box'>{st.session_state.last_answer}</div>", unsafe_allow_html=True)
 
+cols = st.columns(len(SHORTCUTS))
+for i, sc in enumerate(SHORTCUTS):
+    with cols[i]:
+        if st.button(EMOJIS[sc], key=f"sc_{i}"):
+            st.session_state.shortcut = sc
+
+if st.button("Send") and query:
+    rtype_map = {
+        "💬 DEFAULT": "Default",
+        "🤝 CONNECT": "Connect",
+        "🌱 GROW": "Grow",
+        "🔍 EXPLORE": "Explore",
+        "🛠 RESOLVE": "Resolve",
+        "❤ SUPPORT": "Support",
+    }
+    rtype = rtype_map.get(st.session_state.shortcut, "Default")
+    system_message = build_system_message(profile, rtype)
+    prompt = query + EXTRA_MAP.get(st.session_state.shortcut, "")
     with st.spinner("Thinking..."):
         completion = openai.ChatCompletion.create(
             model="gpt-4o",
             messages=[
                 {"role": "system", "content": system_message},
-                {"role": "user", "content": query}
+                {"role": "user", "content": prompt}
             ]
         )
         reply = completion.choices[0].message.content
-        st.markdown("#### 📥 Response")
-        st.write(reply)
-        profile_key = profile.get('profile_name') or f"{profile.get('agent_type','')}_{profile.get('agent_role','default')}"
-        save_chat(profile_key, query, reply)
+    st.session_state.last_answer = reply
+    st.markdown(f"<div class='answer-box'>{reply}</div>", unsafe_allow_html=True)
+    profile_key = profile.get('profile_name') or f"{profile.get('agent_type','')}_{profile.get('agent_role','default')}"
+    save_chat(profile_key, query, reply)
 
 with st.expander("🕓 View Chat History"):
     profile_key = profile.get('profile_name') or f"{profile.get('agent_type','')}_{profile.get('agent_role','default')}"
