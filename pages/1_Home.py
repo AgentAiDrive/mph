@@ -2,16 +2,39 @@ import streamlit as st
 import os
 import json
 
-# --- Custom CSS ---
+# --- Global mobile-friendly styling + app CSS ---
 st.markdown("""
     <style>
+    /* Mobile “phone” container */
+    body {
+      background: linear-gradient(135deg, #2fe273 0%, #09742a 100%) !important;
+      min-height: 100vh;
+    }
+    .stApp {
+      background: linear-gradient(335deg, #2fe273 0%, #09742a 100%) !important;
+      border-radius: 32px;
+      max-width: 400px;
+      min-height: 100vh;
+      height: 100vh;
+      overflow-y: auto;
+      margin: 32px auto;
+      box-shadow: 0 8px 32px rgba(60,60,60,0.25), 0 1.5px 8px rgba(30,90,40,0.06);
+      border: 3px solid #ffffff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 10px;
+    }
+
+    /* Grid for cards */
     .dashboard {
         display: grid;
         grid-template-columns: repeat(2, 1fr);
         gap: 16px;
-        padding: 10px;
-        margin-top: 60px;          /* leave room for top nav */
+        width: 100%;
+        padding: 10px 0;
     }
+    /* Individual card styling */
     .card {
         border-radius: 16px;
         padding: 24px 16px;
@@ -50,33 +73,37 @@ st.markdown("""
         background-color: rgba(255,255,255,0.25);
     }
 
-    /* Top nav (re-used bottom-nav styles but pinned to top) */
-    .bottom-nav {
-        position: fixed;
-        top: 0;
-        left: 0;
+    /* Static top nav bar */
+    .top-nav {
         width: 100%;
         display: flex;
         justify-content: space-around;
         background: #ffffff;
         padding: 12px 0;
         border-bottom: 1px solid #eee;
-        z-index: 100;
+        margin-bottom: 16px;
     }
-    .nav-icon {
-        font-size: 24px;
+    .nav-link {
+        font-size: 16px;
         text-decoration: none;
+        color: #333;
+        padding: 8px 12px;
+        border-radius: 8px;
+        transition: background-color 0.2s ease;
+    }
+    .nav-link:hover {
+        background-color: rgba(0,0,0,0.05);
     }
     </style>
 """, unsafe_allow_html=True)
 
+
 # --- Top Navigation ---
 st.markdown("""
-    <div class="bottom-nav">
-      <a href="?page=2_Create_Profile" class="nav-icon">🧬</a>
-      <a href="?page=3_Chat_Helper"   class="nav-icon">💬</a>
-      <a href="?page=4_Saved_Items"   class="nav-icon">📁</a>
-      <a href="?page=5_Support"       class="nav-icon">🆘</a>
+    <div class="top-nav">
+      <a href="?page=2_Create_Profile" class="nav-link">Home</a>
+      <a href="?page=3_Chat_Helper"   class="nav-link">Chat</a>
+      <a href="?page=4_Saved_Items"   class="nav-link">Saved</a>
     </div>
 """, unsafe_allow_html=True)
 
@@ -96,8 +123,9 @@ for color, title, subtitle, link, btn in cards:
         <div class="card {color}">
             <h2>{title}</h2>
             <small>{subtitle}</small>
-            <a href="{link}">{btn}</a>
+            <a href="{link}" class="nav-link">{btn}</a>
         </div>
     """, unsafe_allow_html=True)
 
 st.markdown('</div>', unsafe_allow_html=True)
+```
