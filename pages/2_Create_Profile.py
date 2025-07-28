@@ -7,9 +7,9 @@ from app_utils import load_api_key, apply_mobile_style
 
 # ---------- API Key Configuration ---------- #
 apply_mobile_style()
-api_key = load_api_key()
+api_key = load_api_key(use_sidebar=False)
 if not api_key:
-    st.sidebar.error("OpenAI API key required.")
+    st.error("OpenAI API key required.")
     st.stop()
 openai.api_key = api_key
 
