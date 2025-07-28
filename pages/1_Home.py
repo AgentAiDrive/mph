@@ -52,14 +52,14 @@ st.markdown("""
     .purple { background-color: #6a4c93; }
 
     .card h2 {
-        margin: 0 0 8px 8px;
+        margin: 0 0 0px 0px;
         text-decoration: overline underline;
-        font-size: 20px;
+        font-size: 24px;
     }
     .card small {
         display: block;
         margin-bottom: 6px;
-        font-size: 14px;
+        font-size: 20px;
         opacity: 0.9;
     }
     .card a {
@@ -68,7 +68,7 @@ st.markdown("""
         border-radius: 20px;
         padding: 8px 8px;
         font-size: 16px;
-        color: white;
+        color: black;
         text-decoration: none;
         transition: background-color 0.2s ease;
     }
@@ -104,60 +104,11 @@ st.markdown("""
 # --- Top navigation ---
 st.markdown("""
   <div class="top-nav">
-    <a href="?page=1_Create_Profile" class="nav-link">HOME</a>
+    <a href="?page=1_Home" class="nav-link">HOME</a>
     <a href="?page=3_Chat_Helper"   class="nav-link">CHAT</a>
     <a href="?page=4_Saved_Items"   class="nav-link">SAVED</a>
   </div>
 """, unsafe_allow_html=True)
-
-
-# --- Active profile status ---
-active = st.session_state.get("active_profile")
-if active:
-    name = active.get("profile_name") or active.get("agent_role", "Profile")
-    st.subheader(f"🟢 Active Profile: {name}")
-else:
-    st.subheader("No profile active.")
-
-
-# --- Saved Profiles & Chats as cards ---
-PROFILE_DIR       = "profiles"
-CHAT_HISTORY_PATH = "chat_history.json"
-
-st.markdown('<div class="dashboard">', unsafe_allow_html=True)
-
-# Saved Profiles card
-st.markdown('<div class="card blue">', unsafe_allow_html=True)
-st.markdown("### Saved Profiles")
-profiles = []
-if os.path.isdir(PROFILE_DIR):
-    for fn in os.listdir(PROFILE_DIR):
-        if fn.endswith(".json"):
-            profiles.append(fn[:-5])
-if profiles:
-    for p in profiles:
-        st.markdown(f"- {p}")
-else:
-    st.write("None")
-st.markdown('</div>', unsafe_allow_html=True)
-
-# Saved Chats card
-st.markdown('<div class="card green">', unsafe_allow_html=True)
-st.markdown("### Saved Chats")
-if os.path.exists(CHAT_HISTORY_PATH):
-    try:
-        with open(CHAT_HISTORY_PATH) as f:
-            history = json.load(f)
-        for convo, msgs in history.items():
-            st.markdown(f"- {convo} ({len(msgs)} msgs)")
-    except Exception as e:
-        st.write(f"Error reading chat history: {e}")
-else:
-    st.write("None")
-st.markdown('</div>', unsafe_allow_html=True)
-
-st.markdown('</div>', unsafe_allow_html=True)
-
 
 # --- Main page links as a 2×2 card grid ---
 st.markdown('<div class="dashboard">', unsafe_allow_html=True)
