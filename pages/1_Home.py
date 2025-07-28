@@ -84,17 +84,14 @@ st.markdown("""
 # --- Logo + Title ---
 col1, col2 = st.columns([1, 4])
 with col1:
-    st.image("MYPARENTHELPERS_512x512.png", width=80)
+    st.image("MYPARENTHELPERS_512x512.png", width=50)
 with col2:
     st.markdown(
-        '<h3 style="margin:0; font-size:20px;">My Parent Helpers</h3>',
-        unsafe_allow_html=True
-    )
+        '<h3 style="margin:10px; font-size:20px;">My Parent Helpers</h3>',
+        unsafe_allow_html=True)
 st.markdown("---")
-
 # --- Main page links as a 2×2 card grid ---
 st.markdown('<div class="dashboard">', unsafe_allow_html=True)
-
 pages = [
     ("red",    "PROFILES", "Create a new pAIrenting agent profile", "/Create_Profile", "NEW"),
     ("blue",   "CHAT",     "Chat with your pAIrent agent",           "/Chat_Helper",   "CHAT"),
