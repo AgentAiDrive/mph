@@ -32,14 +32,14 @@ st.markdown(
     .card-green { background-color: #e8f5e9; }
       
     .biglabel {
-      font-size: 1.1em;
+      font-size: 1.4em;
       font-weight: 800;
-      color: #ffffff;
-      margin: 4px 0 10px;
+      color: #000000;
+      margin: 4px 0 4px;
       text-align: center;
       letter-spacing: 0.5px;
-      background: #e8f5e9;  
-      padding: 6px 12px;
+      background: #e3f2fd;  
+      padding: 6px 6px;
       border-radius: 12px;
     }
     
