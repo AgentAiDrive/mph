@@ -101,7 +101,6 @@ openai.api_key = get_openai_key()
 if not openai.api_key:
     st.error("OpenAI API key required.")
     st.stop()
-openai.api_key = api_key
 
 # Directories for profiles, memory and profile images
 PROFILE_DIR = 'profiles'
