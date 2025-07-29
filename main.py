@@ -1,5 +1,4 @@
 import streamlit as st
-import openai
 from PIL import Image
 from app_utils import get_openai_key
 
