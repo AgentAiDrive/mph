@@ -1,6 +1,7 @@
 import streamlit as st
+import openai
 from PIL import Image
-from app_utils import load_api_key
+from app_utils import get_openai_key
 
 st.set_page_config(page_title="My Parent Helpers", page_icon="👨‍👩‍👧‍👦", layout="centered")
 
@@ -15,6 +16,7 @@ with st.sidebar:
     st.page_link("pages/4_Saved_Items.py", label="Saved Files", icon="📁")
     st.page_link("pages/5_Support.py", label="Support", icon="🆘")
 
-key = load_api_key(use_sidebar=False)
+openai.api_key = get_openai_key()
+if not openai.api_key:
 if not key:
     st.error("OpenAI API key required for chat features.")
