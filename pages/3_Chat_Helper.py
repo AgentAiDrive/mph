@@ -2,11 +2,11 @@ import streamlit as st
 import openai
 import os
 import json
-from app_utils import load_api_key, apply_mobile_style
+from app_utils import apply_mobile_style, get_openai_key
 
 st.set_page_config(page_title="Parent Chat", layout="centered")
 apply_mobile_style()
-openai.api_key = load_api_key(use_sidebar=False)
+openai.api_key = get_openai_key()
 if not openai.api_key:
     st.error("OpenAI API key required.")
     st.stop()
