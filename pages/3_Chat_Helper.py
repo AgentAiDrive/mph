@@ -38,6 +38,12 @@ def build_system_message(profile: dict, response_type: str) -> str:
         fmt = profile.get("format_pref")
         if fmt:
             lines.append(f"Formatting Preference: {fmt}")
+        if profile.get('parent_name'):
+            lines.append(f"Parent Name: {profile['parent_name']}")
+        if profile.get('child_name'):
+            lines.append(f"Child Name: {profile['child_name']}")
+        if profile.get('child_age'):
+            lines.append(f"Child Age: {profile['child_age']}")
         if profile.get("external_data"):
             lines.append("External Data Access: Enabled")
         lines.append(f"Respond with a {response_type}-type answer.")
