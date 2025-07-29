@@ -103,12 +103,13 @@ if not api_key:
     st.stop()
 openai.api_key = api_key
 
-# Directories for profiles and memory
+# Directories for profiles, memory and profile images
 PROFILE_DIR = 'profiles'
 MEMORY_DIR = 'memory_profiles'
+PROFILE_IMAGE_DIR = 'profile_images'
 os.makedirs(PROFILE_DIR, exist_ok=True)
 os.makedirs(MEMORY_DIR, exist_ok=True)
-
+os.makedirs(PROFILE_IMAGE_DIR, exist_ok=True)
 
 def generate_agent_response(config: dict, history: List[dict], docs_content: List[str]) -> str:
     """Generate an assistant reply using OpenAI."""
@@ -123,6 +124,12 @@ def generate_agent_response(config: dict, history: List[dict], docs_content: Lis
         f"Intent Shortcuts: {', '.join(config['intent_shortcuts']) or 'None'}",
         f"Formatting Preference: {config['format_pref']}",
     ]
+    if config.get('parent_name'):
+        system_lines.append(f"Parent Name: {config['parent_name']}")
+    if config.get('child_name'):
+        system_lines.append(f"Child Name: {config['child_name']}")
+    if config.get('child_age'):
+        system_lines.append(f"Child Age: {config['child_age']}")
     if config.get('external_data'):
         system_lines.append("External Data Access: Enabled")
     if docs_content:
@@ -148,6 +155,10 @@ with st.sidebar.form('config_form'):
     st.header('Agent Configuration')
     agent_type = st.selectbox('Agent Type', ['Parenting Coach', 'Emotional Regulator', 'Communication Trainer', 'Cognitive Scaffold'])
     agent_role = st.text_input('Agent Role', 'e.g., De-escalate sibling rivalry')
+    parent_name = st.text_input('Parent Name')
+    child_name = st.text_input('Child Name')
+    child_age = st.number_input('Child Age', min_value=0, max_value=100, step=1)
+    profile_photo_file = st.file_uploader('Upload Profile Photo', type=['png','jpg','jpeg'])
     persona_styles = st.multiselect('Persona Styles', ['Montessori', 'Gentle Parenting', 'Authoritative'])
     custom_notes_file = st.file_uploader('Upload Persona Notes', type=['txt'])
     custom_notes_text = custom_notes_file.read().decode('utf-8', errors='ignore') if custom_notes_file else ''
@@ -180,7 +191,14 @@ with st.sidebar.form('config_form'):
 
 
 if save_profile:
-    profile = {k: v for k, v in locals().items() if k in ['agent_type','agent_role','persona_styles','custom_notes_text','tools','memory_option','external_data','temperature','verbosity','tone','interactive_modes','intent_shortcuts','format_pref']}
+    img_path = ''
+    if profile_photo_file is not None:
+        img_path = os.path.join(PROFILE_IMAGE_DIR, profile_photo_file.name)
+        with open(img_path, 'wb') as img_out:
+            img_out.write(profile_photo_file.getbuffer())
+    profile = {k: v for k, v in locals().items() if k in ['agent_type','agent_role','persona_styles','custom_notes_text','tools','memory_option','external_data','temperature','verbosity','tone','interactive_modes','intent_shortcuts','format_pref','parent_name','child_name','child_age']}
+    if img_path:
+        profile['profile_photo'] = img_path
     fname = os.path.join(PROFILE_DIR, f"profile_{agent_type}_{agent_role}.json")
     with open(fname, 'w') as f:
         json.dump(profile, f)
@@ -200,7 +218,20 @@ st.header('Chat')
 user_input = st.text_input('Your message')
 if st.button('Send') and user_input:
     st.session_state.history.append({'role':'user','content':user_input})
-    config = dict(agent_type=agent_type,agent_role=agent_role,persona_descriptions=persona_descriptions,tools=tools,external_data=external_data,temperature=temperature,verbosity=verbosity,tone=tone,interactive_modes=interactive_modes,intent_shortcuts=intent_shortcuts,format_pref=format_pref)
+    config = dict(agent_type=agent_type,
+                  agent_role=agent_role,
+                  persona_descriptions=persona_descriptions,
+                  tools=tools,
+                  external_data=external_data,
+                  temperature=temperature,
+                  verbosity=verbosity,
+                  tone=tone,
+                  interactive_modes=interactive_modes,
+                  intent_shortcuts=intent_shortcuts,
+                  format_pref=format_pref,
+                  parent_name=parent_name,
+                  child_name=child_name,
+                  child_age=child_age)
     reply = generate_agent_response(config, st.session_state.history, docs_content)
     st.session_state.history.append({'role':'assistant','content':reply})
     if memory_option=='Persistent':
