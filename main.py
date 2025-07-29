@@ -15,8 +15,3 @@ with st.sidebar:
     st.page_link("pages/3_Chat_Helper.py", label="Parent Chat", icon="💬")
     st.page_link("pages/4_Saved_Items.py", label="Saved Files", icon="📁")
     st.page_link("pages/5_Support.py", label="Support", icon="🆘")
-
-openai.api_key = get_openai_key()
-if not openai.api_key:
-if not key:
-    st.error("OpenAI API key required for chat features.")
