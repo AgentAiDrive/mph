@@ -3,7 +3,7 @@ import openai
 import json
 import os
 from typing import List
-from app_utils import load_api_key, apply_mobile_style
+from app_utils import apply_mobile_style, get_openai_key
 
 # --- Global mobile “phone” container + theme + centered cards CSS ---
 st.markdown("""
@@ -97,8 +97,8 @@ with col2:
 st.markdown("---")
 
 # ---------- API Key Configuration ---------- #
-api_key = load_api_key(use_sidebar=False)
-if not api_key:
+openai.api_key = get_openai_key()
+if not openai.api_key:
     st.error("OpenAI API key required.")
     st.stop()
 openai.api_key = api_key
