@@ -24,11 +24,9 @@ if not openai.api_key:
     st.error("OpenAI API key required.")
     st.stop()
 
-# Directories for profiles, memory and profile images
-PROFILE_DIR = 'profiles'
+# Directories for memory and profile images
 MEMORY_DIR = 'memory_profiles'
 PROFILE_IMAGE_DIR = 'profile_images'
-os.makedirs(PROFILE_DIR, exist_ok=True)
 os.makedirs(MEMORY_DIR, exist_ok=True)
 os.makedirs(PROFILE_IMAGE_DIR, exist_ok=True)
 
@@ -120,12 +118,18 @@ if save_profile:
     profile = {k: v for k, v in locals().items() if k in ['agent_type','agent_role','persona_styles','custom_notes_text','tools','memory_option','external_data','temperature','verbosity','tone','interactive_modes','intent_shortcuts','format_pref','parent_name','child_name','child_age']}
     if img_path:
         profile['profile_photo'] = img_path
-    fname = os.path.join(PROFILE_DIR, f"profile_{agent_type}_{agent_role}.json")
-    with open(fname, 'w') as f:
-        json.dump(profile, f)
+    profiles_file = 'profiles.json'
+    profiles_data = []
+    if os.path.exists(profiles_file):
+        try:
+            profiles_data = json.load(open(profiles_file))
+        except Exception:
+            profiles_data = []
+    profiles_data.append(profile)
+    with open(profiles_file, 'w') as f:
+        json.dump(profiles_data, f, indent=2)
     st.session_state['active_profile'] = profile
     st.success("Profile saved and activated! Switch to 'Parent Chat' to begin chatting.")
-    st.success(f'Saved: {fname}')
 
 # Load session history or persistent memory
 profile_key = f"{agent_type}_{agent_role}"
