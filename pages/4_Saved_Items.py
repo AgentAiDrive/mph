@@ -29,16 +29,43 @@ else:
     idx = st.selectbox("Select a profile", range(len(profile_options)), format_func=lambda i: profile_options[i])
     profile = profiles[idx]
     st.subheader("Profile Details")
+    st.markdown(
+        """
+        <style>
+        .profile-card {
+            background-color: rgba(255,255,255,0.1);
+            padding: 15px;
+            border-radius: 12px;
+            color: white;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+        }
+        .profile-card img {width:150px;border-radius:10px;margin-bottom:10px;}
+        .profile-field {margin-bottom:6px;}
+        </style>
+        """,
+        unsafe_allow_html=True,
+    )
+    card = "<div class='profile-card'>"
     photo = profile.get('profile_photo')
     if photo and os.path.exists(photo):
-        st.image(photo, width=150)
+        card += f"<img src='{photo}'/>"
     pname = profile.get('parent_name')
     cname = profile.get('child_name')
     cage = profile.get('child_age')
     if pname or cname:
-        st.write(f"**Parent:** {pname or 'N/A'}")
-        st.write(f"**Child:** {cname or 'N/A'}" + (f" (age {cage})" if cage is not None else ''))
-    st.json({k: v for k, v in profile.items() if not k.startswith('__') and k not in ['profile_photo','parent_name','child_name','child_age']})
+        card += f"<div class='profile-field'><strong>Parent:</strong> {pname or 'N/A'}</div>"
+        child_line = f"<div class='profile-field'><strong>Child:</strong> {cname or 'N/A'}"
+        if cage is not None:
+            child_line += f" (age {cage})"
+        child_line += "</div>"
+        card += child_line
+    for k, v in profile.items():
+        if k.startswith('__') or k in ['profile_photo','parent_name','child_name','child_age']:
+            continue
+        label = k.replace('_',' ').title()
+        card += f"<div class='profile-field'><strong>{label}:</strong> {v}</div>"
+    card += "</div>"
+    st.markdown(card, unsafe_allow_html=True)
    
     if st.button("Activate Profile"):
         st.session_state['active_profile'] = profile
