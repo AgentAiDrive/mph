@@ -1,39 +1,7 @@
 import streamlit as st
-import os
-
-KEY_FILE = "openai_key.txt"
-
-def load_api_key(use_sidebar: bool = False):
-    """Retrieve OpenAI API key.
-
-    The key is looked up from ``st.secrets``, environment variables and the
-    ``openai_key.txt`` file.  If none of those sources provide a value, a text
-    input is displayed for the user.  By default the input is placed in the
-    sidebar, but setting ``use_sidebar`` to ``False`` will render it on the main
-    page instead.
-    """
-    if "openai_api_key" in st.session_state:
-        return st.session_state.openai_api_key
-
-    key = None
-    if "openai" in st.secrets and "api_key" in st.secrets["openai"]:
-        key = st.secrets["openai"]["api_key"]
-    if not key and os.getenv("OPENAI_API_KEY"):
-        key = os.getenv("OPENAI_API_KEY")
-    if not key and os.path.exists(KEY_FILE):
-        try:
-            key = open(KEY_FILE).read().strip()
-        except Exception:
-            key = None
-    if not key:
-        container = st.sidebar if use_sidebar else st
-        key = container.text_input("Enter OpenAI API Key", type="password")
-        remember = container.checkbox("Remember key", key="remember_key")
-        if key and remember:
-            with open(KEY_FILE, "w") as f:
-                f.write(key.strip())
-    st.session_state.openai_api_key = key
-    return key
+def get_openai_key():
+    """Return the OpenAI API key from Streamlit secrets."""
+    return st.secrets.get("openai_key", "YOUR_OPENAI_API_KEY")
 
 STYLE = """
 <style>
