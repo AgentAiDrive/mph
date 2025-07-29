@@ -90,4 +90,3 @@ else:
                 st.experimental_rerun()
         else:
             st.write('No chat history for this profile.')
-    else:
