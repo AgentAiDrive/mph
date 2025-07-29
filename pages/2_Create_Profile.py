@@ -150,8 +150,8 @@ def generate_agent_response(config: dict, history: List[dict], docs_content: Lis
 st.set_page_config(page_title='Parenting Agent', layout='wide')
 st.title('🤖 Parenting Agent')
 
-# Sidebar configuration form
-with st.sidebar.form('config_form'):
+#pairent agent configuration form
+with st.form('config_form'):
     st.header('Agent Configuration')
     agent_type = st.selectbox('Agent Type', ['Parenting Coach', 'Emotional Regulator', 'Communication Trainer', 'Cognitive Scaffold'])
     agent_role = st.text_input('Agent Role', 'e.g., De-escalate sibling rivalry')
@@ -204,7 +204,7 @@ if save_profile:
         json.dump(profile, f)
     st.session_state['active_profile'] = profile
     st.success("Profile saved and activated! Switch to 'Parent Chat' to begin chatting.")
-    st.sidebar.success(f'Saved: {fname}')
+    st.success(f'Saved: {fname}')
 
 # Load session history or persistent memory
 profile_key = f"{agent_type}_{agent_role}"
