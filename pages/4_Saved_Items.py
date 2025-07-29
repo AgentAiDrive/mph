@@ -1,9 +1,9 @@
 import streamlit as st
 import os
 import json
-from app_utils import apply_mobile_style
+from app_utils import apply_phone_style
 
-apply_mobile_style()
+apply_phone_style()
 
 st.title("📁 Saved Items")
 
