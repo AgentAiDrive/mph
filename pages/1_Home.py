@@ -3,6 +3,8 @@ import os
 import json
 from app_utils import apply_mobile_style
 
+st.set_page_config(page_title="My Parent Helpers", page_icon="👨‍👩‍👧‍👦")
+
 # --- Global mobile “phone” container + theme + centered cards CSS ---
 apply_mobile_style()
 st.markdown("""
