@@ -29,7 +29,17 @@ else:
     idx = st.selectbox("Select a profile", range(len(profile_options)), format_func=lambda i: profile_options[i])
     profile = profiles[idx]
     st.subheader("Profile Details")
-    st.json({k: v for k, v in profile.items() if not k.startswith('__')})
+    photo = profile.get('profile_photo')
+    if photo and os.path.exists(photo):
+        st.image(photo, width=150)
+    pname = profile.get('parent_name')
+    cname = profile.get('child_name')
+    cage = profile.get('child_age')
+    if pname or cname:
+        st.write(f"**Parent:** {pname or 'N/A'}")
+        st.write(f"**Child:** {cname or 'N/A'}" + (f" (age {cage})" if cage is not None else ''))
+    st.json({k: v for k, v in profile.items() if not k.startswith('__') and k not in ['profile_photo','parent_name','child_name','child_age']})
+   
     if st.button("Activate Profile"):
         st.session_state['active_profile'] = profile
         st.success("Profile loaded. Switch to 'Parent Chat' to begin chatting.")
