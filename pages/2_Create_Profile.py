@@ -202,6 +202,8 @@ if save_profile:
     fname = os.path.join(PROFILE_DIR, f"profile_{agent_type}_{agent_role}.json")
     with open(fname, 'w') as f:
         json.dump(profile, f)
+    st.session_state['active_profile'] = profile
+    st.success("Profile saved and activated! Switch to 'Parent Chat' to begin chatting.")
     st.sidebar.success(f'Saved: {fname}')
 
 # Load session history or persistent memory
