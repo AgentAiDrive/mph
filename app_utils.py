@@ -3,7 +3,7 @@ import os
 
 KEY_FILE = "openai_key.txt"
 
-def load_api_key(use_sidebar: bool = True):
+def load_api_key(use_sidebar: bool = False):
     """Retrieve OpenAI API key.
 
     The key is looked up from ``st.secrets``, environment variables and the
