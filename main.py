@@ -5,7 +5,7 @@ import json
 from app_utils import apply_phone_style
 from app_utils import get_openai_key
 
-st.set_page_config(page_title="My Parent Helpers", page_icon="👨‍👩‍👧‍👦", layout="centered")
+st.set_page_config(page_title="My Parent Helpers", page_icon="👨‍👩‍👧‍👦", layout="centered", initial_sidebar_state="collapsed")
 
 logo = Image.open("MYPARENTHELPERS_512x512.png")
 
