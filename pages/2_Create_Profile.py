@@ -8,16 +8,6 @@ from app_utils import apply_phone_style, get_openai_key
 # --- Global mobile “phone” container + theme + centered cards CSS ---
 apply_phone_style()
 
-# --- Logo + Title ---
-col1, col2 = st.columns([1, 4])
-with col1:
-    st.image("MYPARENTHELPERS_512x512.png", width=50)
-with col2:
-    st.markdown(
-        '<h3 style="margin:10px; font-size:20px;">My Parent Helpers</h3>',
-        unsafe_allow_html=True)
-st.markdown("---")
-
 # ---------- API Key Configuration ---------- #
 openai.api_key = get_openai_key()
 if not openai.api_key:
@@ -67,7 +57,6 @@ def generate_agent_response(config: dict, history: List[dict], docs_content: Lis
 
 # ---------- UI Setup ---------- #
 st.set_page_config(page_title='Parenting Agent', layout='wide')
-st.title('🤖 Parenting Agent')
 
 #pairent agent configuration form
 with st.form('config_form'):
