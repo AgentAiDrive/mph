@@ -56,7 +56,7 @@ def generate_agent_response(config: dict, history: List[dict], docs_content: Lis
 
 
 # ---------- UI Setup ---------- #
-st.set_page_config(page_title='Parenting Agent', layout='wide')
+st.set_page_config(page_title='Parenting Agent', layout='wide', initial_sidebar_state="collapsed")
 
 #pairent agent configuration form
 with st.form('config_form'):
