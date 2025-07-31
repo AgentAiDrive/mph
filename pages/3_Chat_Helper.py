@@ -5,7 +5,7 @@ from openai import OpenAI
 from app_utils import apply_mobile_style, get_openai_key
 
 # --- Streamlit setup ---
-st.set_page_config(page_title="Parent Chat", layout="centered")
+st.set_page_config(page_title="Agent Chat", layout="centered", initial_sidebar_state="collapsed")
 apply_mobile_style()
 
 # --- OpenAI API Setup ---
