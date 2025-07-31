@@ -4,7 +4,7 @@ import json
 from app_utils import apply_phone_style
 
 apply_phone_style()
-
+st.set_page_config(initial_sidebar_state="collapsed")
 st.title("📁 Saved Items")
 
 PROFILE_DIR = "profiles"
