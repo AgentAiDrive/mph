@@ -60,7 +60,7 @@ st.set_page_config(page_title='Parenting Agent', layout='wide')
 
 #pairent agent configuration form
 with st.form('config_form'):
-    st.header('Agent Configuration')
+    st.header('Build an Agent')
     agent_type = st.selectbox('Agent Type', ['Parenting Coach', 'Emotional Regulator', 'Communication Trainer', 'Cognitive Scaffold'])
     agent_role = st.text_input('Agent Role', 'e.g., De-escalate sibling rivalry')
     parent_name = st.text_input('Parent Name')
