@@ -3,7 +3,7 @@ import os
 import json
 from app_utils import apply_phone_style
 
-st.set_page_config(page_title="My Parent Helpers", page_icon="👨‍👩‍👧‍👦")
+st.set_page_config(page_title="My Parent Helpers", page_icon="👨‍👩‍👧‍👦", initial_sidebar_state="collapsed")
 
 # --- Global mobile “phone” container + theme + centered cards CSS ---
 apply_phone_style()
